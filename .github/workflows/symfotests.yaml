@@ -1,0 +1,64 @@
+name: Symfony Tests Workflow
+
+on:
+    push:
+        branches:
+            master
+    pull_request:
+
+jobs:
+    symfony-tests:
+        runs-on: ubuntu-latest
+
+        services:
+            mysql:
+                image: mysql:8
+                env:
+                    MYSQL_ROOT_PASSWORD: root
+                    MYSQL_DATABASE: symfotests
+                ports:
+                    - 3306:3306
+                options: >-
+                    --health-cmd="mysqladmin ping --silent"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=3
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2.4' # Replace with your PHP version
+                  extensions: mbstring, pdo_mysql
+                  ini-values: post_max_size=256M, upload_max_filesize=256M
+                  coverage: none
+
+            - name: Install Composer
+              run: composer install --no-progress --no-suggest
+
+            # Configure the project (dev -> test)
+            - name: Configure environment
+              run: |
+                  cp .env.test .env
+                  php bin/console cache:clear
+
+            - name: Run migrations
+              run: php bin/console doctrine:migrations:migrate --no-interaction
+
+            - name: Start PHP server
+              run: php -S 127.0.0.1:8000 -t public &
+              env:
+                  APP_ENV: test
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '16' # Replace with your Node.js version
+
+            - name: Install Cypress
+              run: npm install cypress --save-dev
+
+            - name: Run Cypress tests
+              run: npx cypress run
