@@ -61,13 +61,5 @@ jobs:
               env:
                   APP_ENV: test
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: '16' # Replace with your Node.js version
-
-            - name: Install Cypress
-              run: npm install cypress --save-dev
-
-            - name: Run Cypress tests
-              run: npx cypress run
+            - name: Cypress run
+              uses: cypress-io/github-action@v6

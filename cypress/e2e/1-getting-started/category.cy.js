@@ -1,6 +1,6 @@
 describe('Test d\'ajout de catégorie', () => {
     beforeEach(() => {
-        cy.visit('https://127.0.0.1:8000/category');
+        cy.visit('/category');
     });
 
     it('Ajout réussi d\'une catégorie', () => {
