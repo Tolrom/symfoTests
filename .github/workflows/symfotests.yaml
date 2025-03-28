@@ -44,12 +44,13 @@ jobs:
             # Configure the project (dev -> test)
             - name: Configure environment
               run: |
-                  if [ -f .env.test ]; then
-                      cp .env.test .env
-                  else
-                      echo "APP_ENV=test" > .env
-                  fi
-                  php bin/console cache:clear
+                ls -la
+                if [ -f .env.test ]; then
+                    echo ".env.test exists"
+                else
+                    echo ".env.test is missing"
+                    exit 1
+                fi
 
             - name: Run migrations
               run: php bin/console d:m:m --no-interaction
