@@ -1,0 +1,21 @@
+{
+  "name": "symfotests",
+  "version": "1.0.0",
+  "description": "Exercices de test sur application Symfony",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "cypress": "^14.2.1"
+  }
+}
