@@ -33,24 +33,23 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.2.4' # Replace with your PHP version
+                  php-version: '8.2.4'
                   extensions: mbstring, pdo_mysql
                   ini-values: post_max_size=256M, upload_max_filesize=256M
                   coverage: none
-
-            - name: Install Composer
-              run: composer install --no-progress --no-suggest
-
+                  
             # Configure the project (dev -> test)
             - name: Configure environment
               run: |
-                ls -la
                 if [ -f .env.test ]; then
-                    echo ".env.test exists"
+                    cp .env.test .env
                 else
-                    echo ".env.test is missing"
-                    exit 1
+                    echo "APP_ENV=test" > .env
                 fi
+                php bin/console cache:clear
+
+            - name: Install Composer
+              run: composer install --no-progress --no-suggest
 
             - name: Run migrations
               run: php bin/console d:m:m --no-interaction
