@@ -19,7 +19,7 @@ jobs:
                 env:
                     MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
                     MYSQL_ROOT_PASSWORD:
-                    MYSQL_DATABASE: symfotests
+                    MYSQL_DATABASE: symfotest
                 ports:
                     - 3306:3306
                 options: >-
@@ -50,6 +50,8 @@ jobs:
             - name: Install Composer
               run: composer install --no-progress --no-suggest
 
+            - name: Create Database
+              run: php bin/console doctrine:database:create --if-not-exists --no-interaction
 
             - name: Run migrations
               run: php bin/console d:m:m --no-interaction
