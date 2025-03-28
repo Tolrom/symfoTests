@@ -38,19 +38,18 @@ jobs:
                   extensions: mbstring, pdo_mysql
                   ini-values: post_max_size=256M, upload_max_filesize=256M
                   coverage: none
+            # Configure the project (dev -> test)
+            - name: Configure environment
+              run: |
+                if [ -f .env.test ]; then
+                    cp .env.test .env
+                else
+                    echo "APP_ENV=test" > .env
+                fi
 
             - name: Install Composer
               run: composer install --no-progress --no-suggest
 
-            # Configure the project (dev -> test)
-            - name: Configure environment
-              run: |
-                  if [ -f .env.test ]; then
-                      cp .env.test .env
-                  else
-                      echo "APP_ENV=test" > .env
-                  fi
-                  php bin/console cache:clear
 
             - name: Run migrations
               run: php bin/console d:m:m --no-interaction
