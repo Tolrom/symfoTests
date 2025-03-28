@@ -44,7 +44,11 @@ jobs:
             # Configure the project (dev -> test)
             - name: Configure environment
               run: |
-                  cp .env.test .env
+                  if [ -f .env.test ]; then
+                      cp .env.test .env
+                  else
+                      echo "APP_ENV=test" > .env
+                  fi
                   php bin/console cache:clear
 
             - name: Run migrations
